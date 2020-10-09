@@ -77,3 +77,14 @@ SELECT
 FROM countries AS c
 LEFT JOIN composition AS cp ON c.id = cp.country_id
 LEFT JOIN treatment AS t ON c.id = t.country_id;
+
+--For each country in the ECS region, calculate the percent of glass, plastic, paper, and metal that is NOT recycled
+SELECT 
+	c.country_name,
+    (100 - cp.glass_pct) AS not_recycle_glass_pct,
+    (100 - cp.metal_pct) AS not_recycle_metal_pct,
+    (100 - cp.plastic_pct) AS not_recycle_plastic_pct,
+    (100 - cp.paper_pct) AS not_recycle_paper_pct
+FROM countries AS c
+JOIN composition AS cp ON c.id = cp.country_id
+WHERE c.region_id = 'ECS'
