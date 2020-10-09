@@ -1,0 +1,79 @@
+--Identify all country ids for countries that recycle more
+--than 50% of their waste
+SELECT country_id, recycling_percent
+FROM treatment
+WHERE recycling_percent > 50;
+
+--Calculate the average worldwide percent of glass and
+--plastic waste created
+SELECT 
+	ROUND(AVG(glass_pct)::numeric,2) AS avg_glass_pct,
+    ROUND(AVG(plastic_pct)::numeric,2) AS avg_plastic_pct
+FROM composition;
+
+--How many countries are in each region of the world?
+--Order by descending counts of countries.
+SELECT region_id, COUNT(*)
+FROM countries
+GROUP BY region_id
+ORDER BY COUNT(*) DESC;
+
+--Find each countries organinc waste percentage (INNER JOIN
+--DEFAULT)
+SELECT 
+	c.country_name,
+    cp.organic_waste_pct
+FROM countries AS c
+JOIN composition AS cp ON c.ID = cp.country_id;
+
+--Find each countries plastic percentage (INNER JOIN)
+SELECT 
+	c.country_name,
+    cp.plastic_pct
+FROM countries AS c
+INNER JOIN composition AS cp ON c.ID = cp.country_id
+ORDER BY c.country_name;
+
+----LEFT JOIN. null for missing values
+SELECT 
+	c.country_name,
+    cp.plastic_pct
+FROM countries AS c
+LEFT JOIN composition AS cp ON c.ID = cp.country_id
+ORDER BY c.country_name;
+
+--
+SELECT
+	c.country_name,
+    cp.organic_waste_pct,
+    t.compost_percent
+FROM countries AS c
+INNER JOIN composition AS cp ON c.id = cp.country_id
+LEFT JOIN treatment AS t ON c.id = t.country_id
+ORDER BY c.country_name;
+
+--What are the names of the 3 countries that recycle the greatest
+--percent of their waste? What percent do they recycle?
+SELECT c.country_name, t.recycling_percent
+FROM countries AS c
+JOIN treatment AS t ON c.id = t.country_id
+ORDER BY t.recycling_percent DESC
+LIMIT 3;
+
+--For each country, identify the percent of organic waste produced by the country and the percent of composting the country does
+SELECT 
+	c.country_name, 
+ 	cp.organic_waste_pct,
+    t.compost_percent
+FROM countries AS c
+JOIN composition AS cp ON c.id = cp.country_id
+JOIN treatment AS t ON c.id = t.country_id;
+
+--For each country, identify the percent of organic waste produced by the country and the percent of composting the country does (keep null values)
+SELECT 
+	c.country_name, 
+ 	cp.organic_waste_pct,
+    t.compost_percent
+FROM countries AS c
+LEFT JOIN composition AS cp ON c.id = cp.country_id
+LEFT JOIN treatment AS t ON c.id = t.country_id;
