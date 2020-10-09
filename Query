@@ -104,3 +104,32 @@ SELECT c.region_id, SUM(t.recycling_percent)
 FROM countries AS c
 JOIN treatment AS t ON c.id = t.country_id
 GROUP BY c.region_id;
+
+--Find the names of the 5 countries that create the highest percent
+--plastic waste, along with their corresponding percent of plastic ---waste
+SELECT 
+	c.country_name,
+    cp.plastic_pct
+FROM countries AS c
+JOIN composition AS cp ON c.id = cp.country_id
+ORDER BY cp.plastic_pct DESC
+LIMIT 5;
+
+--Which countries in the ECS region compost more than 20% of ---- --their waste
+SELECT 
+	c.country_name,
+    t.compost_percent
+FROM countries AS c
+JOIN treatment AS t ON c.id = t.country_id
+WHERE t.compost_percent > 20;
+
+--Which 2 regions produce the greatest average percent of
+--organic waste?
+SELECT 
+	c.region_id, 
+    AVG(cp.organic_waste_pct) AS avg_organic_waste_pct
+FROM countries AS c
+JOIN composition AS cp ON c.id = cp.country_id 
+GROUP BY c.region_id
+ORDER BY AVG(cp.organic_waste_pct) DESC
+LIMIT 2
