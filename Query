@@ -88,3 +88,19 @@ SELECT
 FROM countries AS c
 JOIN composition AS cp ON c.id = cp.country_id
 WHERE c.region_id = 'ECS'
+
+--What is the average percent of recycling done by each region?
+SELECT c.region_id, ROUND(AVG(t.recycling_percent)::numeric, 2) AS avg_recycling_pct
+FROM countries AS c
+JOIN treatment AS t ON c.id = t.country_id
+GROUP BY c.region_id;
+
+SELECT c.region_id, COUNT(t.recycling_percent)
+FROM countries AS c
+JOIN treatment AS t ON c.id = t.country_id
+GROUP BY c.region_id;
+
+SELECT c.region_id, SUM(t.recycling_percent)
+FROM countries AS c
+JOIN treatment AS t ON c.id = t.country_id
+GROUP BY c.region_id;
